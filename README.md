@@ -24,3 +24,5 @@ go install
 ./logfetcher "Search term"
 
 ```
+
+<img src="http://storage6.static.itmages.com/i/16/1101/h_1478044008_6041088_baa76bad1a.png" />
