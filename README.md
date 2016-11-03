@@ -5,15 +5,17 @@ Simple program for querying logs on Ubuntu system.
 ## Installation
 
 ```bash
-git clone https://github.com/vladotesanovic/logfetcher.git
+go get github.com/vladotesanovic/logfetcher
 
-cd logfetcher
+cd $GOPATH/src/github.com/vladotesanovic/logfetcher
 
 # Install all dependencies
 go get
 
 # Build 
 go build
+
+# Create executables in $GOPATH/bin
 go install
 
 ```
