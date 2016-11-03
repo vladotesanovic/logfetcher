@@ -1,12 +1,14 @@
 package main
 
 import (
-	"github.com/fatih/color"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
+	"sync"
+
+	"github.com/fatih/color"
 )
 
 func main() {
@@ -30,16 +32,17 @@ func main() {
 		panic(err)
 	}
 
-	progress := make(chan int)
-	test := []int{}
 	hits := 0
+
+	var wg sync.WaitGroup
+	wg.Add(len(fileList))
 
 	color.Green("Term: " + search)
 	color.Green("Searching trough : " + strconv.Itoa(len(fileList)) + " files")
 
 	for _, path := range fileList {
 
-		go func(path string, search string, progress *chan int) {
+		go func(path string, search string) {
 
 			file, err := ioutil.ReadFile(path)
 
@@ -55,19 +58,15 @@ func main() {
 				if bingo {
 					color.Yellow(path + " (" + "LINE " + strconv.Itoa(line) + ") ")
 					color.Cyan(content)
-					hits = hits + 1;
+					hits = hits + 1
 				}
 			}
 
-			*progress <- 1
+			wg.Done()
 
-		}(path, search, &progress)
+		}(path, search)
 
-		test = append(test, <-progress)
-
-		if len(test) == len(fileList) {
-			color.Green("Hits: " + strconv.Itoa(hits))
-			os.Exit(0)
-		}
 	}
+
+	wg.Wait()
 }
